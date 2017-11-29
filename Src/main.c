@@ -55,8 +55,7 @@ UART_HandleTypeDef huart2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
-#define APPLICATION_ADDRESS        0x0800C000
-typedef void (*pFunction)(void);
+
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
 
@@ -99,37 +98,16 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	int c=0;
-  while (c<20)
+  while (1)
   {
   /* USER CODE END WHILE */
-	HAL_GPIO_TogglePin( GPIOA, GPIO_PIN_5);
-		HAL_Delay(1000);
-		c++;
+		HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_5);
+		HAL_Delay(500);
   /* USER CODE BEGIN 3 */
+
   }
   /* USER CODE END 3 */
-pFunction appEntry;
-	uint32_t appStack;
 
-	/* Check if firmware update required */
-
-	/* Get the application stack pointer (First entry in the application vector table) */
-	appStack = (uint32_t) *((__IO uint32_t*)APPLICATION_ADDRESS);
-
-	/* Get the application entry point (Second entry in the application vector table) */
-	appEntry = (pFunction) *(__IO uint32_t*) (APPLICATION_ADDRESS + 4);
-
-	/* Reconfigure vector table offset register to match the application location */
-	SCB->VTOR = APPLICATION_ADDRESS;
-
-	/* Set the application stack pointer */
-	__set_MSP(appStack);
-
-	/* Start the application */
-	appEntry();
-
-	while(1);
 }
 
 /** System Clock Configuration
@@ -226,7 +204,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -234,12 +212,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA5 */
-  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  /*Configure GPIO pin : LD2_Pin */
+  GPIO_InitStruct.Pin = LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
 
 }
 
